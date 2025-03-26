@@ -1,3 +1,4 @@
 pandas
+deep-translator
 langdetect
 scikit-learn

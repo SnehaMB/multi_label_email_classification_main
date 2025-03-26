@@ -17,7 +17,6 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
-
 from src.config import CLEANED_DATA_FILE
 from src.models.chained_model import ChainedModel
 from src.models.hierarchial_model import HierarchicalModel
@@ -39,40 +38,39 @@ if __name__ == "__main__":
     preprocess_text()
 
     # Step 4: de duplication by loading the data
-    
+
     df = pd.read_csv(CLEANED_DATA_FILE)
     df = de_duplication(df)
 
     # fival preprocessed data saved
-    
+
     df.to_csv("final_processed_data.csv", index=False)
     print("Final processed data saved as 'final_processed_data.csv'")
 
     # loading the preprocessed data
-    
+
     print("Loading preprocessed data...")
     df = pd.read_csv("final_processed_data.csv")
 
-    # Step 5: for each model 
+    # Step 5: for each model
     X = df.drop(columns=["Type 1", "Type 2", "Type 3", "Type 4"])
 
- 
     # Chained Model targets and target variables
-    
+
     y_chained = df[["Type 2", "Type 3", "Type 4"]]
-    
+
     # Hierarchical Model targets
-    
+
     y_hierarchical = df[["Type 1", "Type 2", "Type 3", "Type 4"]]
 
     # Handle categorical columns like 'Mailbox'
-    
+
     label_encoder = LabelEncoder()
     if "Mailbox" in X.columns:
         X["Mailbox"] = label_encoder.fit_transform(X["Mailbox"])
 
     # Handle text columns with TF-IDF vectorization
-    
+
     if "Ticket Summary" in X.columns:
         X["Ticket Summary"] = X["Ticket Summary"].fillna("")
 
@@ -82,13 +80,13 @@ if __name__ == "__main__":
     X = pd.concat([X, pd.DataFrame(X_tfidf.toarray())], axis=1)
 
     #  non-numeric columns label encodings can be done
-    
+
     for column in X.columns:
         if X[column].dtype == "object":
             X[column] = label_encoder.fit_transform(X[column].astype(str))
 
     # Converting column names to strings
-    
+
     X.columns = X.columns.astype(str)
 
     # missing values can be imputed
@@ -96,7 +94,7 @@ if __name__ == "__main__":
     X = imputer.fit_transform(X)
 
     # Step 6: dataset can be split seperately for each model
-    
+
     X_train, X_test, y_train_chained, y_test_chained = train_test_split(
         X, y_chained, test_size=0.3, random_state=42
     )
@@ -105,14 +103,14 @@ if __name__ == "__main__":
     )
 
     # consistency ensured
-    
+
     if len(X_train) != len(y_train_chained) or len(X_train) != len(
         y_train_hierarchical
     ):
         raise ValueError("Mismatch between feature and target dataset lengths!")
 
     # Train & Evaluation of Chained Model
-    
+
     print("\n= Training the Chained Model =")
     chained_model = ChainedModel()
     chained_model.train(X_train, y_train_chained)
@@ -124,7 +122,7 @@ if __name__ == "__main__":
     chained_model.print_results(y_test_chained, y_pred_chained)
 
     # Train & Evaluation of the Hierarchical Model
-    
+
     print("\n= Training the Hierarchical Model =")
     hierarchical_model = HierarchicalModel()
     hierarchical_model.train(X_train, y_train_hierarchical)

@@ -11,9 +11,9 @@ class ChainedModel(BaseModel):
         self.models = {}
 
     def train(self, X_train, y_train):
-        """
-        Train separate models for each chain (label set).
-        """
+       
+        #Train separate models for each chain (label set).
+        
         for label_set in CHAINED_LABELS:
             print(f"Training model for labels: {label_set}")
             y_train_subset = y_train[label_set]

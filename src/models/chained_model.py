@@ -24,9 +24,9 @@ class ChainedModel(BaseModel):
         print("Training completed for all chained models.")
 
     def predict(self, X_test):
-        """
-        Predict on the test data for each chain.
-        """
+        
+        #Predict on the test data for each chain.
+        
         predictions = {}
         for label_set, model in self.models.items():
             print(f"Predicting for labels: {label_set}")

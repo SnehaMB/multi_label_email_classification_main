@@ -1,7 +1,5 @@
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score
-from sklearn.multioutput import MultiOutputClassifier
-
 from models.base_model import BaseModel
 from src.config import HIERARCHICAL_LABELS
 

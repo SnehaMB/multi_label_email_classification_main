@@ -1,4 +1,4 @@
-## base_model.py (Abstract Base Class for ML Models)
+~#abstract class
 from abc import ABC, abstractmethod
 
 

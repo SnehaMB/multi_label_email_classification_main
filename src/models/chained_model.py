@@ -34,9 +34,9 @@ class ChainedModel(BaseModel):
         return predictions
 
     def print_results(self, y_test, y_pred):
-        """
-        Evaluate the models' performance by calculating overall accuracy and F1 score.
-        """
+        
+        #Evaluate the models' performance by calculating overall accuracy and F1 score.
+        
         all_y_test = []
         all_y_pred = []
 
